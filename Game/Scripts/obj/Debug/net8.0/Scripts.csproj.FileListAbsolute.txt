@@ -1,0 +1,15 @@
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\bin\Debug\net8.0\Scripts.exe
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\bin\Debug\net8.0\Scripts.deps.json
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\bin\Debug\net8.0\Scripts.runtimeconfig.json
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\bin\Debug\net8.0\Scripts.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\bin\Debug\net8.0\Scripts.pdb
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.GeneratedMSBuildEditorConfig.editorconfig
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.AssemblyInfoInputs.cache
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.AssemblyInfo.cs
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.csproj.CoreCompileInputs.cache
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.sourcelink.json
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\refint\Scripts.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.pdb
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\Scripts.genruntimeconfig.cache
+D:\UnityProject\Sparte_PrepareForBattle\Game\Scripts\obj\Debug\net8.0\ref\Scripts.dll
