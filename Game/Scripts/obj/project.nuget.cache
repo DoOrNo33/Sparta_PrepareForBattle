@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NzGacNghNNBUFqJpKumzIqPV6a98Z4HmKCTaC40V1CP1/g8WL597rTjk1yh0v6qpQ+lwDRsziWqr4436IZxnSg==",
+  "dgSpecHash": "t3FKu9Lm6dA6seAfY085pNipCr5bceab2vZJKNK1nnqwjnKwfc+s8VKg+OVEioVzgEjP9S/KdY4Kcr7Nl0MoYw==",
   "success": true,
-  "projectFilePath": "D:\\UnityProject\\Sparte_PrepareForBattle\\Console_Scripts\\Console_Scripts\\Console_Scripts.csproj",
+  "projectFilePath": "D:\\UnityProject\\Sparte_PrepareForBattle\\Game\\Scripts\\Scripts.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

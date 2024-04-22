@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\UnityProject\\Sparte_PrepareForBattle\\Console_Scripts\\Console_Scripts\\Console_Scripts.csproj",
-      "projectName": "Console_Scripts",
-      "projectPath": "D:\\UnityProject\\Sparte_PrepareForBattle\\Console_Scripts\\Console_Scripts\\Console_Scripts.csproj",
+      "projectUniqueName": "D:\\UnityProject\\Sparte_PrepareForBattle\\Game\\Scripts\\Scripts.csproj",
+      "projectName": "Scripts",
+      "projectPath": "D:\\UnityProject\\Sparte_PrepareForBattle\\Game\\Scripts\\Scripts.csproj",
       "packagesPath": "C:\\Users\\solem\\.nuget\\packages\\",
-      "outputPath": "D:\\UnityProject\\Sparte_PrepareForBattle\\Console_Scripts\\Console_Scripts\\obj\\",
+      "outputPath": "D:\\UnityProject\\Sparte_PrepareForBattle\\Game\\Scripts\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\solem\\AppData\\Roaming\\NuGet\\NuGet.Config",
