@@ -1,0 +1,15 @@
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\bin\Debug\net8.0\Game.exe
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\bin\Debug\net8.0\Game.deps.json
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\bin\Debug\net8.0\Game.runtimeconfig.json
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\bin\Debug\net8.0\Game.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\bin\Debug\net8.0\Game.pdb
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.GeneratedMSBuildEditorConfig.editorconfig
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.AssemblyInfoInputs.cache
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.AssemblyInfo.cs
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.csproj.CoreCompileInputs.cache
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.sourcelink.json
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\refint\Game.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.pdb
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.genruntimeconfig.cache
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\ref\Game.dll
