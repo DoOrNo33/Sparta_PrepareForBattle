@@ -18,16 +18,13 @@
             switch(firstAction)
             {
                 case 1:
-                    Console.WriteLine("1을 골랐습니다.");
+                    Console.WriteLine("1. 상태보기를 골랐습니다.");
                     break;
                 case 2:
-                    Console.WriteLine("2를 골랐습니다.");
+                    Console.WriteLine("2. 인벤토리를 골랐습니다.");
                     break;
                 case 3:
-                    Console.WriteLine("3을 골랐습니다.");
-                    break;
-                default:
-                    Console.WriteLine("잘못된 입력입니다");
+                    Console.WriteLine("3. 상점을 골랐습니다.");
                     break;
             }
         }
@@ -35,9 +32,25 @@
         static private int GameStart()
         {
             int select = 0;
-            string input = Console.ReadLine();
             bool isNumber;
-            isNumber = int.TryParse(input, out select);
+            do
+            {
+                string input = Console.ReadLine();
+                isNumber = int.TryParse(input, out select);
+                if (!isNumber)
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Console.Write(">>");
+                }
+                else if (select < 1 || select > 3)
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                    Console.Write(">>");
+                    isNumber = false;
+                }
+            }
+            while (!isNumber);
+
             if (isNumber) 
             {
                 return select;
