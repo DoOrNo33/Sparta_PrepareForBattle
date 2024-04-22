@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Console_Scripts")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a702c8099a815d446fd88f063c6a7a50bfc64cb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ed133f6e2c6cd749a66221e0b03ec48735fd888")]
 [assembly: System.Reflection.AssemblyProductAttribute("Console_Scripts")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Console_Scripts")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

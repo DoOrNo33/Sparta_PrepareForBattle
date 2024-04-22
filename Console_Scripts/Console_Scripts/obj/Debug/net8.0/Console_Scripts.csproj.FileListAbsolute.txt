@@ -1,0 +1,15 @@
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\bin\Debug\net8.0\Console_Scripts.exe
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\bin\Debug\net8.0\Console_Scripts.deps.json
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\bin\Debug\net8.0\Console_Scripts.runtimeconfig.json
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\bin\Debug\net8.0\Console_Scripts.dll
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\bin\Debug\net8.0\Console_Scripts.pdb
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.GeneratedMSBuildEditorConfig.editorconfig
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.AssemblyInfoInputs.cache
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.AssemblyInfo.cs
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.csproj.CoreCompileInputs.cache
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.sourcelink.json
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.dll
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\refint\Console_Scripts.dll
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.pdb
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\Console_Scripts.genruntimeconfig.cache
+D:\UnityProject\Sparte_PrepareForBattle\Console_Scripts\Console_Scripts\obj\Debug\net8.0\ref\Console_Scripts.dll
