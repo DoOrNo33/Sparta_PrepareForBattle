@@ -1,6 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
+using System.IO;
+
+
+
 
 namespace Game
 {
@@ -18,30 +22,39 @@ namespace Game
             bool quitSellMyItemCheck = false;
             bool quitDungeonCheck = false;
             bool quitInn = false;
+            bool isLoad = false;
 
             int dungeonClearCount = 0;
             int requireExp = 1;
 
 
+            //int loadItemCount = 0;
+
+
+
+
+
             // 아이템 클래스 생성
             Item noviceArmor = new Item();
-            noviceArmor.SetItem("수련자 갑옷     ", 2, 5f  , "수련에 도움을 주는 갑옷입니다.                   ", 1000, "수련자 갑옷");
+            noviceArmor.SetItem("수련자 갑옷     ", 2, 5f  , "수련에 도움을 주는 갑옷입니다.                   ", 1000, "수련자 갑옷", 1);
             Item ironArmor = new Item();
-            ironArmor.SetItem("무쇠갑옷        ", 2, 9f  , "무쇠로 만들어져 튼튼한 갑옷입니다.               ", 1800, "무쇠갑옷");
+            ironArmor.SetItem("무쇠갑옷        ", 2, 9f  , "무쇠로 만들어져 튼튼한 갑옷입니다.               ", 1800, "무쇠갑옷", 2);
             Item spartanArmor = new Item();
-            spartanArmor.SetItem("스파르타의 갑옷 ", 2, 15f , "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500, "스파르타의 갑옷");
+            spartanArmor.SetItem("스파르타의 갑옷 ", 2, 15f , "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", 3500, "스파르타의 갑옷", 3);
             Item wornSword = new Item();
-            wornSword.SetItem("낡은 검         ", 1, 2f  , "쉽게 볼 수 있는 낡은 검 입니다.                  ", 600, "낡은 검");
+            wornSword.SetItem("낡은 검         ", 1, 2f  , "쉽게 볼 수 있는 낡은 검 입니다.                  ", 600, "낡은 검", 4);
             Item bronzeAxe = new Item();
-            bronzeAxe.SetItem("청동 도끼       ", 1, 5f  , "어디선가 사용됐던거 같은 도끼입니다.             ", 1500, "청동 도끼");
+            bronzeAxe.SetItem("청동 도끼       ", 1, 5f  , "어디선가 사용됐던거 같은 도끼입니다.             ", 1500, "청동 도끼", 5);
             Item spartanSpear = new Item();
-            spartanSpear.SetItem("스파르타의 창   ", 1, 7f  , "스파르타의 전사들이 사용했다는 전설의 창입니다.  ", 2700, "스파르타의 창");
+            spartanSpear.SetItem("스파르타의 창   ", 1, 7f  , "스파르타의 전사들이 사용했다는 전설의 창입니다.  ", 2700, "스파르타의 창", 6);
             Item legendarySword = new Item();
-            legendarySword.SetItem("전설의 검       ", 1, 80f, "용사를 위한 전설의 검 입니다.                    ", 100, "전설의 검");
+            legendarySword.SetItem("전설의 검       ", 1, 80f, "용사를 위한 전설의 검 입니다.                    ", 100, "전설의 검", 7);
 
             Item[] shopItems = new Item[] { noviceArmor, ironArmor, spartanArmor, wornSword, bronzeAxe, spartanSpear, legendarySword };
 
             List<Item> myItems = new List<Item>();
+
+            List<string> loadItemStr = new List<string>();
 
 
             // 던전 생성
@@ -66,11 +79,26 @@ namespace Game
             character.defenseValue = 5f;
             character.adDefenseValue = character.defenseValue;
             character.hitPoint = 100;
-            character.gold = 5500;
+            character.gold = 1500;
 
             do
             {
                 Console.Clear();
+
+                if (isLoad == false)
+                {
+                    if (File.Exists("D:\\TaihaData.text"))              // 데이터 저장 위치
+                    {
+                        LoadDate();
+                    }
+                    isLoad = true;
+                }
+
+                //else
+                //{
+                //    Console.WriteLine("세이브가 없습니다");
+                //}
+
                 Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.");
                 Console.WriteLine("\n1. 상태 보기\n2. 인벤토리\n3. 상점\n4. 던전입장\n5. 여관\n\n0. 게임 종료");
                 Console.WriteLine("\n원하시는 행동을 입력해주세요.");
@@ -82,6 +110,25 @@ namespace Game
                 {
                     case 0:
                         Console.WriteLine("게임을 종료합니다.");
+                        int tempItemCount = 0;
+                        int i = 0;
+                        foreach (Item getItem in shopItems)
+                        {
+                            i++;
+                            tempItemCount++;
+                            string tempItemName = getItem.number + ":" + getItem.get + ":" + getItem.equip;
+                            File.WriteAllText($"D:\\TaihaItemData[{i}].text", tempItemName.ToString());
+                        }
+                        string myVariable =
+                            $"{character.name}," +
+                            $"{character.level}," +
+                            $"{character.hitPoint}," +
+                            $"{character.gold}," +
+                            $"{tempItemCount}," +
+                            $"{dungeonClearCount}," +
+                            $"{requireExp}";                    // 데이터 저장
+                        File.WriteAllText("D:\\TaihaData.text", myVariable.ToString());
+
                         gameOn = false;
                         break;
                     case 1:                                 // 1. 상태 보기
@@ -714,7 +761,7 @@ namespace Game
                     {
                         dungeonClearCount++;
                         float gap = (dungeons[difficult - 1].recommandDefenseValue - character.adDefenseValue);
-                        int j = random.Next(20 - (int)gap, 36 + (int)gap);
+                        int j = random.Next(20 + (int)gap, 36 + (int)gap);
                         int tempHitPoint = character.hitPoint;                                                              // 체력 설정
                         character.hitPoint -= j;
                         Console.WriteLine("던전 클리어");
@@ -736,7 +783,11 @@ namespace Game
                 {
                     dungeonClearCount++;
                     float gap = (dungeons[difficult - 1].recommandDefenseValue - character.adDefenseValue);
-                    int j = random.Next(20 - (int)gap, 36 + (int)gap);
+                    int j = random.Next(20 + (int)gap, 36 + (int)gap);
+                    if (j < 0)
+                    {
+                        j = 0;
+                    }
                     int tempHitPoint = character.hitPoint;                                                              // 체력 설정
                     character.hitPoint -= j;
                     Console.WriteLine("던전 클리어");
@@ -808,6 +859,78 @@ namespace Game
                     dungeonClearCount = 0;
                     Console.WriteLine("레벨 업!");
                 }
+            }
+
+            void LoadDate()
+            {
+                string loadData = File.ReadAllText("D:\\TaihaData.text");       // 세이브 기록 위치
+                string[] loadDatas = loadData.Split(',');
+                character.level = int.Parse(loadDatas[1]);
+                character.attackValue = (10f + (character.level * 0.5f) - 0.5f);
+                character.adAttackValue = character.attackValue;
+                character.hitPoint = int.Parse(loadDatas[2]);
+                character.gold = int.Parse(loadDatas[3]);
+                dungeonClearCount = int.Parse(loadDatas[5]);
+                requireExp = int.Parse(loadDatas[6]);
+
+                if (int.Parse(loadDatas[4]) != 0)                                 // 5번째가 아이템 갯수 // 아이템 기록 확인
+                {                                                               // getItem.number + ":" + getItem.get + ":" + getItem.equip;
+                    for (int i = 0; i < int.Parse(loadDatas[4]); i++)
+                    {
+                        string loadItem = File.ReadAllText($"D:\\TaihaItemData[{i + 1}].text");
+                        //loadItemStr.Add(loadItem);
+                        //loadItemCount++;
+                        string[] loadGetItems = loadItem.Split(":");
+                        if ((bool.Parse(loadGetItems[1])) == true)
+                        {
+                            foreach (Item tempGetItem in shopItems)
+                            {
+                                if (tempGetItem.number == int.Parse(loadGetItems[0]))   // 불러온 아이템은  획득 처리
+                                {
+                                    tempGetItem.get = true;
+                                    myItems.Add(tempGetItem);
+
+
+                                }
+
+                                if (bool.Parse(loadGetItems[2]) == true)              // 불러온 아이템 장착 처리
+                                {
+                                    foreach (Item tempEquipItem in myItems)
+                                    {
+                                        if (int.Parse(loadGetItems[0]) == tempEquipItem.number)
+                                        {
+                                            tempEquipItem.equip = true;
+                                        }
+                                    }
+
+                                }
+
+
+
+                            }
+                        }
+
+
+
+                    }
+
+                }
+
+                foreach (Item tempEquipItem in myItems)                         // 장착 아이템 확인해서 수정 공격력, 방어력 입력
+                {
+                    if (tempEquipItem.equip == true)
+                    {
+                        if (tempEquipItem.type == 1)
+                        {
+                            character.adAttackValue += tempEquipItem.value;
+                        }
+                        else
+                        {
+                            character.adDefenseValue += tempEquipItem.value;
+                        }
+                    }
+                }
+
             }
         }
 
@@ -997,8 +1120,9 @@ namespace Game
         public int price = 0;
         public bool get = false;
         public bool equip = false;
+        public int number = 0;
 
-        public void SetItem(string Name, int Type, float Value, string Information, int Price, string NickName)
+        public void SetItem(string Name, int Type, float Value, string Information, int Price, string NickName, int num)
         {
             name = Name;
             type = Type;
@@ -1006,6 +1130,7 @@ namespace Game
             information = Information;
             price = Price;
             nickName = NickName;
+            number = num;
         }
     }
 
