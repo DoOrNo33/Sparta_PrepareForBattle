@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "edkeoh8B6gnduE/38cyrV6M/u6USUGYVSYBBBqndnxGHWvAJUZ4xrFDXiNJ9fhdUVx1adhhxKkcH/4Na+cXqvg==",
+  "dgSpecHash": "/6g+k9K4OvrS7L0cQ2HZj+etV/k2MRxbi51PzfaXvnXLzLlDHRhBtWrPxbpjKR+HjKWIa/Y3jPAvfGnCn3b6Ag==",
   "success": true,
   "projectFilePath": "D:\\UnityProject\\Sparte_PrepareForBattle\\Game\\Game\\Game.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\solem\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
