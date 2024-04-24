@@ -104,11 +104,12 @@ namespace Game
                 Console.WriteLine("\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int firstAction = SelectNumber(5);
+                //int firstAction = SelectNumber(5);
+                MainMenuAction firstAction = (MainMenuAction)SelectNumber(5);
 
                 switch (firstAction)
                 {
-                    case 0:
+                    case MainMenuAction.QuitGame:
                         Console.WriteLine("게임을 종료합니다.");
                         int tempItemCount = 0;
                         int i = 0;
@@ -131,10 +132,11 @@ namespace Game
 
                         gameOn = false;
                         break;
-                    case 1:                                 // 1. 상태 보기
+                    case MainMenuAction.ViewStatus:                                 // 1. 상태 보기
+                        //Status status = new Status();
                         ViewStatus();
                         break;
-                    case 2:
+                    case MainMenuAction.OpenInventory:
                         quitInventory = false;
                         do
                         {
@@ -142,7 +144,7 @@ namespace Game
                         }
                         while (!quitInventory);
                         break;
-                    case 3:
+                    case MainMenuAction.VisitShop:
                         shopQuitCheck = false;
                         do
                         {
@@ -150,7 +152,7 @@ namespace Game
                         }
                         while (!shopQuitCheck);
                         break;
-                    case 4:
+                    case MainMenuAction.EnterDungeon:
                         quitDungeonCheck = false;
                         do
                         {
@@ -158,7 +160,7 @@ namespace Game
                         }
                         while(!quitDungeonCheck);
                         break;
-                    case 5:
+                    case MainMenuAction.VisitInn:
                         quitInn = false;
                         do
                         {
@@ -603,6 +605,8 @@ namespace Game
                 else if (shopItems[buyAction - 1].get)
                 {
                     Console.WriteLine("이미 구매한 아이템입니다.");
+                    Console.WriteLine("<Press Any Key>");
+                    Console.ReadLine();
                 }
                 else
                 {
@@ -835,6 +839,7 @@ namespace Game
                         {
                             int tempHitPoint = character.hitPoint;
                             character.hitPoint = 100;
+                            character.gold -= 500;
                             Console.WriteLine($"휴식을 완료했습니다.\n체력 : {tempHitPoint} -> {character.hitPoint}");
                             Console.WriteLine("<Press Any Key>");
                             Console.ReadLine();
@@ -932,40 +937,51 @@ namespace Game
                 }
 
             }
+
+
         }
 
-
-        static public int GameStart()
+        enum MainMenuAction                             // 열거형 도전
         {
-            int select = 0;
-            bool isNumber;
-            do
-            {
-                string input = Console.ReadLine();
-                isNumber = int.TryParse(input, out select);
-                if (!isNumber)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                }
-                else if (select < 0 || select > 3)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                    isNumber = false;
-                }
-            }
-            while (!isNumber);
-
-            if (isNumber) 
-            {
-                return select;
-            }
-            else
-            {
-                return select;
-            }
+            QuitGame,
+            ViewStatus,
+            OpenInventory,
+            VisitShop,
+            EnterDungeon,
+            VisitInn
         }
+
+        //static public int GameStart()
+        //{
+        //    int select = 0;
+        //    bool isNumber;
+        //    do
+        //    {
+        //        string input = Console.ReadLine();
+        //        isNumber = int.TryParse(input, out select);
+        //        if (!isNumber)
+        //        {
+        //            Console.WriteLine("잘못된 입력입니다.");
+        //            Console.Write(">>");
+        //        }
+        //        else if (select < 0 || select > 3)
+        //        {
+        //            Console.WriteLine("잘못된 입력입니다.");
+        //            Console.Write(">>");
+        //            isNumber = false;
+        //        }
+        //    }
+        //    while (!isNumber);
+
+        //    if (isNumber) 
+        //    {
+        //        return select;
+        //    }
+        //    else
+        //    {
+        //        return select;
+        //    }
+        //}
 
         static public int SelectStatusAction()
         {
@@ -1063,90 +1079,90 @@ namespace Game
             }
         }
 
-        static public int ViewStatus()
-        {
-            int select = 0;
-            bool isNumber;
-            do
-            {
-                string input = Console.ReadLine();
-                isNumber = int.TryParse(input, out select);
-                if (!isNumber)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                }
-                else if (select < 1 || select > 3)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                    isNumber = false;
-                }
-            }
-            while (!isNumber);
+        //static public int ViewStatus()
+        //{
+        //    int select = 0;
+        //    bool isNumber;
+        //    do
+        //    {
+        //        string input = Console.ReadLine();
+        //        isNumber = int.TryParse(input, out select);
+        //        if (!isNumber)
+        //        {
+        //            Console.WriteLine("잘못된 입력입니다.");
+        //            Console.Write(">>");
+        //        }
+        //        else if (select < 1 || select > 3)
+        //        {
+        //            Console.WriteLine("잘못된 입력입니다.");
+        //            Console.Write(">>");
+        //            isNumber = false;
+        //        }
+        //    }
+        //    while (!isNumber);
 
-            if (isNumber)
-            {
-                return select;
-            }
-            else
-            {
-                return select;
-            }
-        }
+        //    if (isNumber)
+        //    {
+        //        return select;
+        //    }
+        //    else
+        //    {
+        //        return select;
+        //    }
+        //}
     }
 
-    public class Character
-    {
-        public int level = 0;
-        public string name = "";
-        public string job = "";
-        public float attackValue = 0;
-        public float adAttackValue = 0;
-        public float defenseValue = 0;
-        public float adDefenseValue = 0;
-        public int hitPoint = 0;
-        public int gold = 0;
+    //public class Character
+    //{
+    //    public int level = 0;
+    //    public string name = "";
+    //    public string job = "";
+    //    public float attackValue = 0;
+    //    public float adAttackValue = 0;
+    //    public float defenseValue = 0;
+    //    public float adDefenseValue = 0;
+    //    public int hitPoint = 0;
+    //    public int gold = 0;
 
-    }
+    //}
     
-    public class Item
-    {
-        public string name = "";
-        public string nickName = "";
-        public int type = 0; // 1: 무기, 2: 방어구
-        public float value = 0;
-        public string information = "";
-        public int price = 0;
-        public bool get = false;
-        public bool equip = false;
-        public int number = 0;
+    //public class Item
+    //{
+    //    public string name = "";
+    //    public string nickName = "";
+    //    public int type = 0; // 1: 무기, 2: 방어구
+    //    public float value = 0;
+    //    public string information = "";
+    //    public int price = 0;
+    //    public bool get = false;
+    //    public bool equip = false;
+    //    public int number = 0;
 
-        public void SetItem(string Name, int Type, float Value, string Information, int Price, string NickName, int num)
-        {
-            name = Name;
-            type = Type;
-            value = Value;
-            information = Information;
-            price = Price;
-            nickName = NickName;
-            number = num;
-        }
-    }
+    //    public void SetItem(string Name, int Type, float Value, string Information, int Price, string NickName, int num)
+    //    {
+    //        name = Name;
+    //        type = Type;
+    //        value = Value;
+    //        information = Information;
+    //        price = Price;
+    //        nickName = NickName;
+    //        number = num;
+    //    }
+    //}
 
-    public class Dungeon
-    {
-        public string dungeonLevel = "";
-        public float recommandDefenseValue = 0f;
-        public int clearReward = 0;
+    //public class Dungeon
+    //{
+    //    public string dungeonLevel = "";
+    //    public float recommandDefenseValue = 0f;
+    //    public int clearReward = 0;
 
-        public void MakeDungeon(string level, float recommand, int reward)
-        {
-            dungeonLevel = level;
-            recommandDefenseValue = recommand;
-            clearReward = reward;
-        }
-    }
+    //    public void MakeDungeon(string level, float recommand, int reward)
+    //    {
+    //        dungeonLevel = level;
+    //        recommandDefenseValue = recommand;
+    //        clearReward = reward;
+    //    }
+    //}
 
 
 }
