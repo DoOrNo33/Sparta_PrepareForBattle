@@ -12,11 +12,12 @@ namespace Game
         public float recommandDefenseValue = 0f;
         public int clearReward = 0;
 
-        public void MakeDungeon(string level, float recommand, int reward)
+        public Dungeon(string Level, float Value, int Reward)
         {
-            dungeonLevel = level;
-            recommandDefenseValue = recommand;
-            clearReward = reward;
+            dungeonLevel = Level;
+            recommandDefenseValue=Value;
+            clearReward = Reward;
         }
+
     }
 }
