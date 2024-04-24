@@ -10,15 +10,15 @@ namespace Game
 {
     internal class Program
     {
-
+        
 
         static void Main(string[] args)
         {
             bool gameOn = true;                 // 게임 구동
             bool quitInventory = false;
             bool quitEquipment = false;
-            bool shopQuitCheck = false;             
-            bool buyShopItemCheck = false;             // 상점 확인
+            bool quitShop = false;             
+            bool quitBuyItem = false;             // 상점 확인
             bool quitSellMyItemCheck = false;
             bool quitDungeonCheck = false;
             bool quitInn = false;
@@ -26,12 +26,6 @@ namespace Game
 
             int dungeonClearCount = 0;
             int requireExp = 1;
-
-
-            //int loadItemCount = 0;
-
-
-
 
 
             // 아이템 클래스 생성
@@ -52,34 +46,19 @@ namespace Game
 
             Item[] shopItems = new Item[] { noviceArmor, ironArmor, spartanArmor, wornSword, bronzeAxe, spartanSpear, legendarySword };
 
-            List<Item> myItems = new List<Item>();
+            //List<Item> myItems = new List<Item>();
 
             List<string> loadItemStr = new List<string>();
 
 
             // 던전 생성
 
-            Dungeon easyDungeon = new Dungeon();
-            Dungeon normalDungeon = new Dungeon();
-            Dungeon hardDungeon = new Dungeon();
-            easyDungeon.MakeDungeon("쉬운 던전", 5, 1000);
-            normalDungeon.MakeDungeon("일반 던전", 11, 1700);
-            hardDungeon.MakeDungeon("어려운 던전", 17, 2500);
+            Dungeon easyDungeon = new Dungeon("쉬운 던전", 5f, 1000);
+            Dungeon normalDungeon = new Dungeon("일반 던전", 11f, 1700);
+            Dungeon hardDungeon = new Dungeon("어려운 던전", 17f, 2500);
 
-            Dungeon[] dungeons = [ easyDungeon, normalDungeon, hardDungeon ];
+            Dungeon[] dungeons = [easyDungeon, normalDungeon, hardDungeon];
 
-
-            //MakeCharacter();
-            Character character = new Character();
-            character.level = 1;
-            character.name = "Jack";
-            character.job = "전사";
-            character.attackValue = 10f;
-            character.adAttackValue = character.attackValue;
-            character.defenseValue = 5f;
-            character.adDefenseValue = character.defenseValue;
-            character.hitPoint = 100;
-            character.gold = 1500;
 
             do
             {
@@ -94,18 +73,13 @@ namespace Game
                     isLoad = true;
                 }
 
-                //else
-                //{
-                //    Console.WriteLine("세이브가 없습니다");
-                //}
-
                 Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.\n이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.");
                 Console.WriteLine("\n1. 상태 보기\n2. 인벤토리\n3. 상점\n4. 던전입장\n5. 여관\n\n0. 게임 종료");
                 Console.WriteLine("\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
                 //int firstAction = SelectNumber(5);
-                MainMenuAction firstAction = (MainMenuAction)SelectNumber(5);
+                MainMenuAction firstAction = (MainMenuAction)GameManager.instance.SelectNumber(5);
 
                 switch (firstAction)
                 {
@@ -121,10 +95,10 @@ namespace Game
                             File.WriteAllText($"D:\\TaihaItemData[{i}].text", tempItemName.ToString());
                         }
                         string myVariable =
-                            $"{character.name}," +
-                            $"{character.level}," +
-                            $"{character.hitPoint}," +
-                            $"{character.gold}," +
+                            $"{GameManager.instance.character.name}," +
+                            $"{GameManager.instance.character.level}," +
+                            $"{GameManager.instance.character.hitPoint}," +
+                            $"{GameManager.instance.character.gold}," +
                             $"{tempItemCount}," +
                             $"{dungeonClearCount}," +
                             $"{requireExp}";                    // 데이터 저장
@@ -132,9 +106,9 @@ namespace Game
 
                         gameOn = false;
                         break;
-                    case MainMenuAction.ViewStatus:                                 // 1. 상태 보기
-                        //Status status = new Status();
-                        ViewStatus();
+                    case MainMenuAction.ViewStatus:                                 
+                        Status status = new Status();
+                        status.ViewStatus();
                         break;
                     case MainMenuAction.OpenInventory:
                         quitInventory = false;
@@ -145,20 +119,30 @@ namespace Game
                         while (!quitInventory);
                         break;
                     case MainMenuAction.VisitShop:
-                        shopQuitCheck = false;
+                        quitShop = false;
                         do
                         {
                             VisitShop();
                         }
-                        while (!shopQuitCheck);
+                        while (!quitShop);
                         break;
                     case MainMenuAction.EnterDungeon:
-                        quitDungeonCheck = false;
-                        do
+                        if (GameManager.instance.character.hitPoint <= 0)
                         {
-                            EnterDungeon();
+                            Console.WriteLine("체력이 다 떨어졌습니다. 여관에서 휴식을 취해주세요.");
+                            Console.WriteLine("<Press Any Key>");
+                            Console.Write(">>");
+                            Console.ReadLine();
                         }
-                        while(!quitDungeonCheck);
+                        else
+                        {
+                            quitDungeonCheck = false;
+                            do
+                            {
+                                EnterDungeon();
+                            }
+                            while (!quitDungeonCheck && GameManager.instance.character.hitPoint > 0);
+                        }
                         break;
                     case MainMenuAction.VisitInn:
                         quitInn = false;
@@ -173,71 +157,12 @@ namespace Game
             while (gameOn);
 
 
-            void ViewStatus()
-            {
-                float attackItemValue = 0;
-                float defenseItemValue = 0;
-
-                Console.Clear();
-                Console.WriteLine("상태 보기");
-                Console.WriteLine("캐릭터의 정보가 표시됩니다.\n");
-                Console.WriteLine("Lv. {0:D2}", character.level);
-                Console.WriteLine($"{character.name} ( {character.job} )");
-                foreach (Item item in myItems)                                  //무기 꼈는지 체크
-                {
-                    if (item.type == 1)            
-                    {
-                        if (item.equip)            
-                        {
-                            attackItemValue += item.value;
-                        }
-                    }
-                }
-
-                foreach (Item item in myItems)                      // 방어구 아이템 꼈는지 체크
-                {
-                    if (item.type == 2)             
-                    {
-                        if (item.equip)           
-                        {
-                            defenseItemValue += item.value;
-                        }
-                    }
-                }
-
-                if (attackItemValue == 0)
-                { 
-                    Console.WriteLine($"공격력 : {character.adAttackValue}");
-                }
-                else
-                {
-                    Console.WriteLine($"공격력 : {(character.adAttackValue)} (+{attackItemValue})");
-                }
-
-                if (defenseItemValue == 0)
-                {
-                    Console.WriteLine($"방어력 : {character.adDefenseValue}");
-                }
-                else
-                {
-                    Console.WriteLine($"방어력 : {(character.adDefenseValue)} (+{defenseItemValue})");
-                }
-
-
-                Console.WriteLine($"체 력 : {character.hitPoint}");
-                Console.WriteLine($"Gold : {character.gold} G");
-                Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
-                Console.Write(">>");
-
-                int statusAction = SelectStatusAction();  // 상태창 액션 선택
-            }
-
             void ViewInventory()
             {
                 Console.Clear();
                 Console.WriteLine("인벤토리");
                 Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n\n[아이템 목록]\n");
-                foreach (Item name in myItems)
+                foreach (Item name in GameManager.instance.myItems)
                 {
                     if (name.equip)                 // 장착 했다면
                     {
@@ -297,7 +222,7 @@ namespace Game
                 Console.WriteLine("\n1. 장착 관리\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int inventoryAction = SelectInventoryAction();  // 인벤토리창 액션 선택
+                int inventoryAction = GameManager.instance.SelectNumber(1);  // 인벤토리창 액션 선택
 
                 switch (inventoryAction)
                 {
@@ -324,7 +249,7 @@ namespace Game
                 Console.WriteLine("인벤토리 - 장착 관리");
                 Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.\n\n[아이템 목록]\n");
                 int i = 0;                          // 반복 제어
-                foreach (Item name in myItems)
+                foreach (Item name in GameManager.instance.myItems)
                 {
                     i++;
                     if (name.equip)                 // 장착 했다면
@@ -383,53 +308,53 @@ namespace Game
                 Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int equipAction = SelectNumber(myItems.Count);      // 장착 액션은 아이템 수에 한정
+                int equipAction = GameManager.instance.SelectNumber(GameManager.instance.myItems.Count);      // 장착 액션은 아이템 수에 한정
 
                 if (equipAction == 0)
                 {
                     quitEquipment = true;
                 }
-                else if (myItems[equipAction - 1].equip)            // 그 아이템을 장착하고 있다면,
+                else if (GameManager.instance.myItems[equipAction - 1].equip)            // 그 아이템을 장착하고 있다면,
                 {
-                    if (myItems[equipAction - 1].type == 1)
+                    if (GameManager.instance.myItems[equipAction - 1].type == 1)
                     {
-                        character.adAttackValue -= myItems[equipAction - 1].value;
+                        GameManager.instance.character.adAttackValue -= GameManager.instance.myItems[equipAction - 1].value;
                     }
                     else
                     {
-                        character.adDefenseValue -= myItems[equipAction - 1].value;
+                        GameManager.instance.character.adDefenseValue -= GameManager.instance.myItems[equipAction - 1].value;
                     }
-                    myItems[equipAction - 1].equip = false;
+                    GameManager.instance.myItems[equipAction - 1].equip = false;
                 }
                 else
                 {
-                    foreach (Item item in myItems)      // 장착되어있는 장비 중 타입이 장착하려는 장비를 찾아서 장착 해제
+                    foreach (Item item in GameManager.instance.myItems)      // 장착되어있는 장비 중 타입이 장착하려는 장비를 찾아서 장착 해제
                     {
                         if (item.equip)
                         {
-                            if (item.type == myItems[equipAction - 1].type)
+                            if (item.type == GameManager.instance.myItems[equipAction - 1].type)
                             {
-                                if (myItems[equipAction - 1].type == 1)
+                                if (GameManager.instance.myItems[equipAction - 1].type == 1)
                                 {
-                                    character.adAttackValue -= myItems[equipAction - 1].value;
+                                    GameManager.instance.character.adAttackValue -= GameManager.instance.myItems[equipAction - 1].value;
                                 }
                                 else
                                 {
-                                    character.adDefenseValue -= myItems[equipAction - 1].value;
+                                    GameManager.instance.character.adDefenseValue -= GameManager.instance.myItems[equipAction - 1].value;
                                 }
                                 item.equip = false;
                             }
                         }
                     }
-                    myItems[equipAction - 1].equip = true;      // 장착 아이템 설정
+                    GameManager.instance.myItems[equipAction - 1].equip = true;      // 장착 아이템 설정
 
-                    if (myItems[equipAction - 1].type == 1)         // 장착 아이템이 무기라면 공격력 +
+                    if (GameManager.instance.myItems[equipAction - 1].type == 1)         // 장착 아이템이 무기라면 공격력 +
                     {
-                        character.adAttackValue += myItems[equipAction - 1].value;
+                        GameManager.instance.character.adAttackValue += GameManager.instance.myItems[equipAction - 1].value;
                     }
                     else
                     {
-                        character.adDefenseValue += myItems[equipAction - 1].value;
+                        GameManager.instance.character.adDefenseValue += GameManager.instance.myItems[equipAction - 1].value;
                     }
 
 
@@ -441,7 +366,7 @@ namespace Game
                 Console.Clear();
                 Console.WriteLine("상점");
                 Console.WriteLine("필요한 아이템을 얻을 수 잇는 상점입니다.\n\n[보유 골드]");
-                Console.WriteLine($"{character.gold} G\n");
+                Console.WriteLine($"{GameManager.instance.character.gold} G\n");
                 Console.WriteLine("[아이템 목록]");
                 for (int i = 0; i < shopItems.Length; i++)              // 상점 아이템 리스트출력
                 {
@@ -502,24 +427,24 @@ namespace Game
                 Console.WriteLine("\n1. 아이템 구매\n2. 아이템 판매\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int shopAction = SelectNumber(2);  // 상점 액션 선택
+                ShopAction shopAction = (ShopAction)GameManager.instance.SelectNumber(2);  // 상점 액션 선택
 
                 switch (shopAction)
                 {
-                    case 0:
-                        shopQuitCheck = true;
+                    case ShopAction.QuitShop:
+                        quitShop = true;
                         break;
-                    case 1:
-                        buyShopItemCheck = false;
+                    case ShopAction.BuyItem:
+                        quitBuyItem = false;
 
                         do
                         {
                             BuyShopItem();
                         }
-                        while (!buyShopItemCheck);
+                        while (!quitBuyItem);
 
                         break;
-                    case 2:
+                    case ShopAction.SellItem:
                         quitSellMyItemCheck = false;
                         do
                         {
@@ -534,7 +459,7 @@ namespace Game
             {
                 Console.Clear();
                 Console.WriteLine("상점 - 아이템 구매\n필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]");
-                Console.WriteLine($"{character.gold} G");
+                Console.WriteLine($"{GameManager.instance.character.gold} G");
                 Console.WriteLine("\n[아이템 목록]");
 
                 for (int i = 0; i < shopItems.Length; i++)              // 상점 아이템 리스트 출력
@@ -596,31 +521,33 @@ namespace Game
                 Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int buyAction = SelectNumber(shopItems.Length);
+                int buyAction = GameManager.instance.SelectNumber(shopItems.Length);
 
                 if (buyAction == 0)
                 {
-                    buyShopItemCheck = true;
+                    quitBuyItem = true;
                 }
                 else if (shopItems[buyAction - 1].get)
                 {
                     Console.WriteLine("이미 구매한 아이템입니다.");
                     Console.WriteLine("<Press Any Key>");
+                    Console.Write(">>");
                     Console.ReadLine();
                 }
                 else
                 {
-                    if (character.gold >= shopItems[buyAction - 1].price)
+                    if (GameManager.instance.character.gold >= shopItems[buyAction - 1].price)
                     {
                         Console.WriteLine("구매를 완료했습니다.\n<Press Any Key>");
-                        character.gold -= shopItems[buyAction - 1].price;
+                        GameManager.instance.character.gold -= shopItems[buyAction - 1].price;
                         shopItems[buyAction - 1].get = true;                        // 내 아이템 리스트에 추가
-                        myItems.Add(shopItems[buyAction - 1]);
+                        GameManager.instance.myItems.Add(shopItems[buyAction - 1]);
                         Console.ReadLine();
                     }
                     else
                     {
                         Console.WriteLine("Gold 가 부족합니다.\n<Press Any Key>");
+                        Console.Write(">>");
                         Console.ReadLine();
                     }
                 }
@@ -631,9 +558,9 @@ namespace Game
                 Console.Clear();
                 Console.WriteLine("상점 - 아이템 판매");
                 Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.\n\n[보유 골드]\n");
-                Console.WriteLine($"{character.gold} G\n\n[아이템 목록]");
+                Console.WriteLine($"{GameManager.instance.character.gold} G\n\n[아이템 목록]");
                 int i = 0;
-                foreach (Item name in myItems)
+                foreach (Item name in GameManager.instance.myItems)
                 {
                     i++;
                     if (name.equip)                 // 장착 했다면
@@ -692,7 +619,7 @@ namespace Game
                 Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int sellAction = SelectNumber(myItems.Count);
+                int sellAction = GameManager.instance.SelectNumber(GameManager.instance.myItems.Count);
 
                 if (sellAction == 0)
                 {
@@ -700,17 +627,10 @@ namespace Game
                 }
                 else
                 {
-                    int sellConfirm = 0;
-                    Console.WriteLine($"정말 {myItems[sellAction - 1].nickName}을(를) 판매하시겠습니까?\n1. 예\n0. 아니오");
-                    Console.Write(">>");
-                    sellConfirm = SelectNumber(1);
-                    if (sellConfirm == 1)
-                    {
-                        character.gold += (myItems[sellAction - 1].price * 85 / 100);
-                        myItems[sellAction - 1].equip = false;
-                        myItems[sellAction - 1].get = false;
-                        myItems.RemoveAt(sellAction - 1);
-                    }
+                    GameManager.instance.character.gold += (GameManager.instance.myItems[sellAction - 1].price * 85 / 100);
+                    GameManager.instance.myItems[sellAction - 1].equip = false;
+                    GameManager.instance.myItems[sellAction - 1].get = false;
+                    GameManager.instance.myItems.RemoveAt(sellAction - 1);
 
                 }
 
@@ -729,7 +649,7 @@ namespace Game
                 Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int dungeonSelectAction = SelectNumber(3);
+                int dungeonSelectAction = GameManager.instance.SelectNumber(3);
 
                 if (dungeonSelectAction == 0)
                 {
@@ -746,7 +666,7 @@ namespace Game
             {
                 Random random = new Random();               // 랜덤 객체 생성
                 Console.Clear();
-                if (dungeons[difficult - 1].recommandDefenseValue > character.adDefenseValue)
+                if (dungeons[difficult - 1].recommandDefenseValue > GameManager.instance.character.adDefenseValue)
                 {
                     int i = random.Next(0, 10);
                     if (i < 4)
@@ -754,59 +674,74 @@ namespace Game
                         Console.WriteLine("던전 클리어 실패");
                         Console.WriteLine($"\n{dungeons[difficult - 1].dungeonLevel}을 클리어에 실패하였습니다.\n");
                         Console.WriteLine("[탐험 결과]");
-                        int temp = character.hitPoint;
-                        character.hitPoint = character.hitPoint / 2;
-                        Console.WriteLine($"체력 {temp} -> {character.hitPoint}");
-                        Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
+                        int temp = GameManager.instance.character.hitPoint;
+                        GameManager.instance.character.hitPoint = GameManager.instance.character.hitPoint / 2;
+                        if (GameManager.instance.character.hitPoint < 0)
+                        {
+                            GameManager.instance.character.hitPoint = 0;
+                            Console.WriteLine("체력이 다 떨어졌습니다. 여관에서 휴식을 취해주세요.");
+                        }
+                        Console.WriteLine($"체력 {temp} -> {GameManager.instance.character.hitPoint}");
+                        Console.WriteLine("\n<Press Any Key>");
                         Console.Write(">>");
-                        SelectNumber(0);
+                        Console.ReadLine();
                     }
                     else
                     {
                         dungeonClearCount++;
-                        float gap = (dungeons[difficult - 1].recommandDefenseValue - character.adDefenseValue);
+                        float gap = (dungeons[difficult - 1].recommandDefenseValue - GameManager.instance.character.adDefenseValue);
                         int j = random.Next(20 + (int)gap, 36 + (int)gap);
-                        int tempHitPoint = character.hitPoint;                                                              // 체력 설정
-                        character.hitPoint -= j;
+                        int tempHitPoint = GameManager.instance.character.hitPoint;                                                              // 체력 설정
+                        GameManager.instance.character.hitPoint -= j;
                         Console.WriteLine("던전 클리어");
                         Console.WriteLine($"축하합니다!!\n{dungeons[difficult - 1].dungeonLevel}을 클리어 하엿습니다.\n");
                         Console.WriteLine("[탐험 결과]");
+                        if (GameManager.instance.character.hitPoint < 0)
+                        {
+                            GameManager.instance.character.hitPoint = 0;
+                            Console.WriteLine("체력이 다 떨어졌습니다. 여관에서 휴식을 취해주세요.");
+                        }
                         LevelCheck(dungeonClearCount);
-                        Console.WriteLine($"체력 {tempHitPoint} -> {character.hitPoint}");                                // 골드 보상 설정
-                        int k = random.Next((int)character.adAttackValue, (int)(((character.adAttackValue) * 2) + 1));
+                        Console.WriteLine($"체력 {tempHitPoint} -> {GameManager.instance.character.hitPoint}");                                // 골드 보상 설정
+                        int k = random.Next((int)GameManager.instance.character.adAttackValue, (int)(((GameManager.instance.character.adAttackValue) * 2) + 1));
                         int adReward = dungeons[difficult - 1].clearReward * (1 + (k / 100));
-                        int tempGold = character.gold;
-                        character.gold += adReward;
-                        Console.WriteLine($"Gold {tempGold} G -> {character.gold} G");
-                        Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
+                        int tempGold = GameManager.instance.character.gold;
+                        GameManager.instance.character.gold += adReward;
+                        Console.WriteLine($"Gold {tempGold} G -> {GameManager.instance.character.gold} G");
+                        Console.WriteLine("\n<Press Any Key>");
                         Console.Write(">>");
-                        SelectNumber(0);
+                        Console.ReadLine();
                     }
                 }
                 else
                 {
                     dungeonClearCount++;
-                    float gap = (dungeons[difficult - 1].recommandDefenseValue - character.adDefenseValue);
+                    float gap = (dungeons[difficult - 1].recommandDefenseValue - GameManager.instance.character.adDefenseValue);
                     int j = random.Next(20 + (int)gap, 36 + (int)gap);
                     if (j < 0)
                     {
                         j = 0;
                     }
-                    int tempHitPoint = character.hitPoint;                                                              // 체력 설정
-                    character.hitPoint -= j;
+                    int tempHitPoint = GameManager.instance.character.hitPoint;                                                              // 체력 설정
+                    GameManager.instance.character.hitPoint -= j;
                     Console.WriteLine("던전 클리어");
                     Console.WriteLine($"축하합니다!!\n{dungeons[difficult - 1].dungeonLevel}을 클리어 하엿습니다.\n");
                     Console.WriteLine("[탐험 결과]");
+                    if (GameManager.instance.character.hitPoint < 0)
+                    {
+                        GameManager.instance.character.hitPoint = 0;
+                        Console.WriteLine("체력이 다 떨어졌습니다. 여관에서 휴식을 취해주세요.");
+                    }
                     LevelCheck(dungeonClearCount);
-                    Console.WriteLine($"체력 {tempHitPoint} -> {character.hitPoint}");                                // 골드 보상 설정
-                    int k = random.Next((int)character.adAttackValue, (int)(((character.adAttackValue) * 2) + 1));
+                    Console.WriteLine($"체력 {tempHitPoint} -> {GameManager.instance.character.hitPoint}");                                // 골드 보상 설정
+                    int k = random.Next((int)GameManager.instance.character.adAttackValue, (int)(((GameManager.instance.character.adAttackValue) * 2) + 1));
                     int adReward = dungeons[difficult - 1].clearReward * (1 + (k / 100));
-                    int tempGold = character.gold;
-                    character.gold += adReward;
-                    Console.WriteLine($"Gold {tempGold} G -> {character.gold} G");
-                    Console.WriteLine("\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
+                    int tempGold = GameManager.instance.character.gold;
+                    GameManager.instance.character.gold += adReward;
+                    Console.WriteLine($"Gold {tempGold} G -> {GameManager.instance.character.gold} G");
+                    Console.WriteLine("\n<Press Any Key>");
                     Console.Write(">>");
-                    SelectNumber(0);
+                    Console.ReadLine();
                 }
 
 
@@ -816,11 +751,11 @@ namespace Game
             {
                 Console.Clear();
                 Console.WriteLine("여관");
-                Console.WriteLine($"500 G 를 내면 휴식할 수 있습니다. (보유 골드 : {character.gold} G)\n\n[현재 체력]\n{character.hitPoint}");
+                Console.WriteLine($"500 G 를 내면 휴식할 수 있습니다. (보유 골드 : {GameManager.instance.character.gold} G)\n\n[현재 체력]\n{GameManager.instance.character.hitPoint}");
                 Console.WriteLine("\n1. 휴식하기\n0. 나가기\n\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int restAction = SelectNumber(1);  //액션 선택
+                int restAction = GameManager.instance.SelectNumber(1);  //액션 선택
 
                 if (restAction == 0)
                 {
@@ -828,26 +763,40 @@ namespace Game
                 }
                 else
                 {
-                    if (character.hitPoint == 100)
+                    if (GameManager.instance.character.hitPoint == 100)
                     {
                         Console.WriteLine("이미 충분히 쉬었습니다.\n<Press Any Key>");
                         Console.ReadLine();
                     }
                     else
                     {
-                        if (character.gold >= 500)
+                        if (GameManager.instance.character.gold >= 500)
                         {
-                            int tempHitPoint = character.hitPoint;
-                            character.hitPoint = 100;
-                            character.gold -= 500;
-                            Console.WriteLine($"휴식을 완료했습니다.\n체력 : {tempHitPoint} -> {character.hitPoint}");
+                            int tempHitPoint = GameManager.instance.character.hitPoint;
+                            GameManager.instance.character.hitPoint = 100;
+                            GameManager.instance.character.gold -= 500;
+                            Console.WriteLine($"휴식을 완료했습니다.\n체력 : {tempHitPoint} -> {GameManager.instance.character.hitPoint}");
                             Console.WriteLine("<Press Any Key>");
                             Console.ReadLine();
                         }
                         else
                         {
-                            Console.WriteLine("Gold 가 부족합니다.\n<Press Any Key>");
-                            Console.ReadLine();
+                            if (GameManager.instance.character.hitPoint <= 0)
+                            {
+                                Console.WriteLine("여관 주인이 당신을 불쌍히 여겨 숙박을 허락했습니다.\n");
+                                int tempHitPoint = GameManager.instance.character.hitPoint;
+                                GameManager.instance.character.hitPoint = 100;
+                                GameManager.instance.character.gold = 0;
+                                Console.WriteLine($"휴식을 완료했습니다.\n체력 : {tempHitPoint} -> {GameManager.instance.character.hitPoint}");
+                                Console.WriteLine("<Press Any Key>");
+                                Console.ReadLine();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Gold 가 부족합니다.\n<Press Any Key>");
+                                Console.ReadLine();
+                            }
+
                         }
                     }
                 }
@@ -857,9 +806,9 @@ namespace Game
             {
                 if (requireExp == count)  
                 {
-                    character.level++;
-                    character.attackValue += 0.5f;
-                    character.adAttackValue += 0.5f;
+                    GameManager.instance.character.level++;
+                    GameManager.instance.character.attackValue += 0.5f;
+                    GameManager.instance.character.adAttackValue += 0.5f;
                     requireExp++;
                     dungeonClearCount = 0;
                     Console.WriteLine("레벨 업!");
@@ -870,11 +819,11 @@ namespace Game
             {
                 string loadData = File.ReadAllText("D:\\TaihaData.text");       // 세이브 기록 위치
                 string[] loadDatas = loadData.Split(',');
-                character.level = int.Parse(loadDatas[1]);
-                character.attackValue = (10f + (character.level * 0.5f) - 0.5f);
-                character.adAttackValue = character.attackValue;
-                character.hitPoint = int.Parse(loadDatas[2]);
-                character.gold = int.Parse(loadDatas[3]);
+                GameManager.instance.character.level = int.Parse(loadDatas[1]);
+                GameManager.instance.character.attackValue = (10f + (GameManager.instance.character.level * 0.5f) - 0.5f);
+                GameManager.instance.character.adAttackValue = GameManager.instance.character.attackValue;
+                GameManager.instance.character.hitPoint = int.Parse(loadDatas[2]);
+                GameManager.instance.character.gold = int.Parse(loadDatas[3]);
                 dungeonClearCount = int.Parse(loadDatas[5]);
                 requireExp = int.Parse(loadDatas[6]);
 
@@ -893,52 +842,41 @@ namespace Game
                                 if (tempGetItem.number == int.Parse(loadGetItems[0]))   // 불러온 아이템은  획득 처리
                                 {
                                     tempGetItem.get = true;
-                                    myItems.Add(tempGetItem);
+                                    GameManager.instance.myItems.Add(tempGetItem);
 
 
                                 }
 
                                 if (bool.Parse(loadGetItems[2]) == true)              // 불러온 아이템 장착 처리
                                 {
-                                    foreach (Item tempEquipItem in myItems)
+                                    foreach (Item tempEquipItem in GameManager.instance.myItems)
                                     {
                                         if (int.Parse(loadGetItems[0]) == tempEquipItem.number)
                                         {
                                             tempEquipItem.equip = true;
                                         }
                                     }
-
                                 }
-
-
-
                             }
                         }
-
-
-
                     }
-
                 }
 
-                foreach (Item tempEquipItem in myItems)                         // 장착 아이템 확인해서 수정 공격력, 방어력 입력
+                foreach (Item tempEquipItem in GameManager.instance.myItems)                         // 장착 아이템 확인해서 수정 공격력, 방어력 입력
                 {
                     if (tempEquipItem.equip == true)
                     {
                         if (tempEquipItem.type == 1)
                         {
-                            character.adAttackValue += tempEquipItem.value;
+                            GameManager.instance.character.adAttackValue += tempEquipItem.value;
                         }
                         else
                         {
-                            character.adDefenseValue += tempEquipItem.value;
+                            GameManager.instance.character.adDefenseValue += tempEquipItem.value;
                         }
                     }
                 }
-
             }
-
-
         }
 
         enum MainMenuAction                             // 열거형 도전
@@ -951,218 +889,14 @@ namespace Game
             VisitInn
         }
 
-        //static public int GameStart()
-        //{
-        //    int select = 0;
-        //    bool isNumber;
-        //    do
-        //    {
-        //        string input = Console.ReadLine();
-        //        isNumber = int.TryParse(input, out select);
-        //        if (!isNumber)
-        //        {
-        //            Console.WriteLine("잘못된 입력입니다.");
-        //            Console.Write(">>");
-        //        }
-        //        else if (select < 0 || select > 3)
-        //        {
-        //            Console.WriteLine("잘못된 입력입니다.");
-        //            Console.Write(">>");
-        //            isNumber = false;
-        //        }
-        //    }
-        //    while (!isNumber);
-
-        //    if (isNumber) 
-        //    {
-        //        return select;
-        //    }
-        //    else
-        //    {
-        //        return select;
-        //    }
-        //}
-
-        static public int SelectStatusAction()
+        enum ShopAction
         {
-            int select = 0;
-            bool isNumber;
-            do
-            {
-                string input = Console.ReadLine();
-                isNumber = int.TryParse(input, out select);
-                if (!isNumber)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                }
-                else if (select < 0 || select > 0)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                    isNumber = false;
-                }
-            }
-            while (!isNumber);
-
-            if (isNumber)
-            {
-                return select;
-            }
-            else
-            {
-                return select;
-            }
+            QuitShop,
+            BuyItem,
+            SellItem
         }
 
-        static public int SelectInventoryAction()
-        {
-            int select = 0;
-            bool isNumber;
-            do
-            {
-                string input = Console.ReadLine();
-                isNumber = int.TryParse(input, out select);
-                if (!isNumber)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                }
-                else if (select < 0 || select > 1)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                    isNumber = false;
-                }
-            }
-            while (!isNumber);
-
-            if (isNumber)
-            {
-                return select;
-            }
-            else
-            {
-                return select;
-            }
-        }
-
-        static public int SelectNumber(int number)
-        {
-            int select = 0;
-            bool isNumber;
-            do
-            {
-                string input = Console.ReadLine();
-                isNumber = int.TryParse(input, out select);
-                if (!isNumber)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                }
-                else if (select < 0 || select > number)
-                {
-                    Console.WriteLine("잘못된 입력입니다.");
-                    Console.Write(">>");
-                    isNumber = false;
-                }
-            }
-            while (!isNumber);
-
-            if (isNumber)
-            {
-                return select;
-            }
-            else
-            {
-                return select;
-            }
-        }
-
-        //static public int ViewStatus()
-        //{
-        //    int select = 0;
-        //    bool isNumber;
-        //    do
-        //    {
-        //        string input = Console.ReadLine();
-        //        isNumber = int.TryParse(input, out select);
-        //        if (!isNumber)
-        //        {
-        //            Console.WriteLine("잘못된 입력입니다.");
-        //            Console.Write(">>");
-        //        }
-        //        else if (select < 1 || select > 3)
-        //        {
-        //            Console.WriteLine("잘못된 입력입니다.");
-        //            Console.Write(">>");
-        //            isNumber = false;
-        //        }
-        //    }
-        //    while (!isNumber);
-
-        //    if (isNumber)
-        //    {
-        //        return select;
-        //    }
-        //    else
-        //    {
-        //        return select;
-        //    }
-        //}
     }
-
-    //public class Character
-    //{
-    //    public int level = 0;
-    //    public string name = "";
-    //    public string job = "";
-    //    public float attackValue = 0;
-    //    public float adAttackValue = 0;
-    //    public float defenseValue = 0;
-    //    public float adDefenseValue = 0;
-    //    public int hitPoint = 0;
-    //    public int gold = 0;
-
-    //}
-    
-    //public class Item
-    //{
-    //    public string name = "";
-    //    public string nickName = "";
-    //    public int type = 0; // 1: 무기, 2: 방어구
-    //    public float value = 0;
-    //    public string information = "";
-    //    public int price = 0;
-    //    public bool get = false;
-    //    public bool equip = false;
-    //    public int number = 0;
-
-    //    public void SetItem(string Name, int Type, float Value, string Information, int Price, string NickName, int num)
-    //    {
-    //        name = Name;
-    //        type = Type;
-    //        value = Value;
-    //        information = Information;
-    //        price = Price;
-    //        nickName = NickName;
-    //        number = num;
-    //    }
-    //}
-
-    //public class Dungeon
-    //{
-    //    public string dungeonLevel = "";
-    //    public float recommandDefenseValue = 0f;
-    //    public int clearReward = 0;
-
-    //    public void MakeDungeon(string level, float recommand, int reward)
-    //    {
-    //        dungeonLevel = level;
-    //        recommandDefenseValue = recommand;
-    //        clearReward = reward;
-    //    }
-    //}
 
 
 }
