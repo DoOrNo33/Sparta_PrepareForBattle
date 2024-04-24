@@ -104,11 +104,12 @@ namespace Game
                 Console.WriteLine("\n원하시는 행동을 입력해주세요.");
                 Console.Write(">>");
 
-                int firstAction = SelectNumber(5);
+                //int firstAction = SelectNumber(5);
+                MainMenuAction firstAction = (MainMenuAction)SelectNumber(5);
 
                 switch (firstAction)
                 {
-                    case 0:
+                    case MainMenuAction.QuitGame:
                         Console.WriteLine("게임을 종료합니다.");
                         int tempItemCount = 0;
                         int i = 0;
@@ -131,10 +132,11 @@ namespace Game
 
                         gameOn = false;
                         break;
-                    case 1:                                 // 1. 상태 보기
+                    case MainMenuAction.ViewStatus:                                 // 1. 상태 보기
+                        //Status status = new Status();
                         ViewStatus();
                         break;
-                    case 2:
+                    case MainMenuAction.OpenInventory:
                         quitInventory = false;
                         do
                         {
@@ -142,7 +144,7 @@ namespace Game
                         }
                         while (!quitInventory);
                         break;
-                    case 3:
+                    case MainMenuAction.VisitShop:
                         shopQuitCheck = false;
                         do
                         {
@@ -150,7 +152,7 @@ namespace Game
                         }
                         while (!shopQuitCheck);
                         break;
-                    case 4:
+                    case MainMenuAction.EnterDungeon:
                         quitDungeonCheck = false;
                         do
                         {
@@ -158,7 +160,7 @@ namespace Game
                         }
                         while(!quitDungeonCheck);
                         break;
-                    case 5:
+                    case MainMenuAction.VisitInn:
                         quitInn = false;
                         do
                         {
@@ -935,8 +937,19 @@ namespace Game
                 }
 
             }
+
+
         }
 
+        enum MainMenuAction                             // 열거형 도전
+        {
+            QuitGame,
+            ViewStatus,
+            OpenInventory,
+            VisitShop,
+            EnterDungeon,
+            VisitInn
+        }
 
         //static public int GameStart()
         //{
