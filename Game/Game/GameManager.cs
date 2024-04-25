@@ -9,6 +9,7 @@ namespace Game
     internal class GameManager
     {
         private static GameManager Instance;
+
         public static GameManager instance
         {
             get

@@ -13,3 +13,6 @@ D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\refint\Game.d
 D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.pdb
 D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.genruntimeconfig.cache
 D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\ref\Game.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.csproj.AssemblyReference.cache
+D:\UnityProject\Sparte_PrepareForBattle\Game\Game\obj\Debug\net8.0\Game.csproj.Up2Date
